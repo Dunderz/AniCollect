@@ -3,6 +3,7 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useState } from "react";
 import { auth } from "../../../config/firebase";
 import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 
 export default function Signup() {
   const [email, setEmail] = useState("");
@@ -11,12 +12,17 @@ export default function Signup() {
   const router = useRouter();
 
   const signup = async () => {
-    try {
-      await createUserWithEmailAndPassword(auth, email, password);
-      router.push("/");
-    } catch (error) {
-      console.error(error);
-    }
+    return createUserWithEmailAndPassword(auth, email, password)
+      .then(() => {
+        return signIn("credentials", {
+          email: email,
+          password: password,
+          callbackUrl: "/",
+        });
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
 
   return (
@@ -106,11 +112,7 @@ export default function Signup() {
                   !passwordAgain ||
                   password !== passwordAgain
                 }
-                onClick={() =>
-                  signup().then(() => {
-                    router.push("/");
-                  })
-                }
+                onClick={() => signup()}
                 className="disabled:opacity-40 flex w-full justify-center rounded-md bg-indigo-500 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
               >
                 Sign Up
