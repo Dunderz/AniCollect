@@ -1,16 +1,19 @@
 "use client";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { redirect } from "next/navigation";
 
 export default function Home() {
   const session = useSession();
   const router = useRouter();
 
+  const handleSignOut = () => {
+    signOut();
+  };
+
   return (
     <div className="p-8">
-      <div>Home</div>
-      {!session && (
+      <div>AniCollect</div>
+      {!session.data && (
         <>
           <div className="cursor-pointer" onClick={() => router.push("signup")}>
             Sign Up
@@ -20,13 +23,12 @@ export default function Home() {
           </div>
         </>
       )}
-      {session && (
+      {session.data && (
         <>
           <div className="text-white">{session?.data?.user?.email}</div>
-          <div className="cursor-pointer" onClick={() => signOut()}>
+          <div className="cursor-pointer" onClick={handleSignOut}>
             Logout
           </div>
-          <div>omg</div>
         </>
       )}
     </div>
