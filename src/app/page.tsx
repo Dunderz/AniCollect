@@ -12,7 +12,7 @@ export default function Home() {
 
   return (
     <div className="p-8">
-      <div>AniCollect</div>
+      <div>NextBeat</div>
       {!session.data && (
         <>
           <div className="cursor-pointer" onClick={() => router.push("signup")}>
